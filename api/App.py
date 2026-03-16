@@ -1,5 +1,4 @@
 from flask import Flask, send_file
-from flask_cors import CORS
 import os
 from config.config import Config
 from extensions.db import db
@@ -13,10 +12,6 @@ from seed.seed_users import seed_users
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-
-    # Enable CORS - Allow all origins
-    CORS(app, supports_credentials=True)
-
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
