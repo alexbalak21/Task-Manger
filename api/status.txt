@@ -1,0 +1,17 @@
+Possible Statuses :
+
+Pending → task created but not started
+
+Awaiting → waiting for someone/something
+
+Scheduled → planned for a specific time
+
+In Progress → currently being worked on
+
+On Hold → temporarily paused
+
+Blocked → cannot proceed
+
+Completed → finished
+
+Cancelled → abandoned
