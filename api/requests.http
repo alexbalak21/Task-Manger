@@ -1,7 +1,33 @@
+@baseUrl = http://127.0.0.1:5000
+
+# Tokens from login
+@loginAccess_token = ""
+@loginRefresh_token = ""
+
+# Tokens from refresh
+@newAccess_token = ""
+@newRefresh_token = ""
+
+### LOGIN REQUEST ###
+# @name login
 POST http://127.0.0.1:5000/api/auth/login
 Content-Type: application/json
 
 {
     "email": "john.doe@example.com",
     "password": "password@1234"
-}   
+}
+
+### VARIABLE EXTRACTION ###
+@loginAccess_token = {{login.response.body.access_token}}
+@loginRefresh_token = {{login.response.body.refresh_token}}
+
+
+#### BASIC LOGIN ####
+POST http://127.0.0.1:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "john.doe@example.com",
+    "password": "password@1234"
+} 
