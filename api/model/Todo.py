@@ -11,9 +11,9 @@ class Todo(db.Model):
     in_progress = db.Column(db.Boolean, default=False)
     completed = db.Column(db.Boolean, default=False)
 
-    # Who completed it
-    completed_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
-    completed_by_user = db.relationship("User")
+    # Who worked on it
+    worked_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    worked_by_user = db.relationship("User")
 
     # When it was completed
     completed_at = db.Column(db.DateTime, nullable=True)
