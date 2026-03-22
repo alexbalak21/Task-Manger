@@ -4,8 +4,9 @@ from config.config import Config
 from extensions.db import db
 from extensions.bcrypt import bcrypt
 from extensions.jwt import jwt
-from controller.auth_controller import auth_bp
-from controller.user_controller import user_bp
+from controller.AuthController import auth_bp
+from controller.UserController import user_bp
+from controller.TaskController import task_bp
 from seed.seed_users import seed_users
 
 
@@ -18,6 +19,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(task_bp)
 
     @app.get("/")
     def health():
