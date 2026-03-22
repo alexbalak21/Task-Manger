@@ -1,13 +1,13 @@
-from model.Status import Status
+from model.Priority import Priority
 from extensions.db import db
 
-def seed_status():
-    statuses = ["Todo", "In Progress", "Completed", "Blocked"]
+def seed_priority():
+    priorities = ["Low", "Medium", "High", "Urgent"]
 
-    for name in statuses:
-        existing = Status.query.filter_by(name=name).first()
+    for name in priorities:
+        existing = Priority.query.filter_by(name=name).first()
         if not existing:
-            db.session.add(Status(name=name))
-            print(f"Seeded status: {name}")
+            db.session.add(Priority(name=name))
+            print(f"Seeded priority: {name}")
 
     db.session.commit()

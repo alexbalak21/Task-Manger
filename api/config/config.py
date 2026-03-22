@@ -2,7 +2,7 @@ import os
 import datetime
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key")
+    SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-min-32-bytes")
     
     # Database Configuration (MySQL)
     MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
@@ -22,7 +22,7 @@ class Config:
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-secret")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-this-jwt-secret-key-min-32-bytes")
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=15)
     JWT_REFRESH_TOKEN_EXPIRES = datetime.timedelta(days=30)
 

@@ -8,6 +8,8 @@ from controller.AuthController import auth_bp
 from controller.UserController import user_bp
 from controller.TaskController import task_bp
 from seed.seed_users import seed_users
+from seed.seed_priority import seed_priority
+from seed.seed_status import seed_status
 
 
 def create_app():
@@ -35,6 +37,8 @@ def create_app():
         try:
             db.create_all()
             seed_users()
+            seed_priority()
+            seed_status()
         except Exception as e:
             app.logger.warning(f"Database initialization skipped: {e}")
             print(f"⚠️  Database not accessible. Run 'flask init-db' to initialize.")
@@ -46,6 +50,8 @@ def create_app():
         try:
             db.create_all()
             seed_users()
+            seed_priority()
+            seed_status()
             print("✓ Database initialized successfully!")
         except Exception as e:
             print(f"✗ Error initializing database: {e}")

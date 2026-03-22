@@ -17,7 +17,7 @@ class TaskRepository:
 		return task
 
 	@staticmethod
-	def update():
+	def update(task):
 		db.session.commit()
 
 	@staticmethod

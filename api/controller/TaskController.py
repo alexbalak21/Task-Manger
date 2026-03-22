@@ -37,7 +37,10 @@ def get_task(task_id):
 @admin_required
 def create_task():
 	data = request.json
-	task = TaskService.create(data)
+	try:
+		task = TaskService.create(data)
+	except ValueError as err:
+		return jsonify({"error": str(err)}), 400
 	return jsonify(task_to_dto(task)), 201
 
 # UPDATE task
@@ -48,7 +51,10 @@ def update_task(task_id):
 	if not task:
 		return jsonify({"error": "Task not found"}), 404
 	data = request.json
-	updated = TaskService.update(task, data)
+	try:
+		updated = TaskService.update(task, data)
+	except ValueError as err:
+		return jsonify({"error": str(err)}), 400
 	return jsonify(task_to_dto(updated))
 
 # DELETE task (admin only)
