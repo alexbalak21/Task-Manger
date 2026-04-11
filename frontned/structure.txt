@@ -1,0 +1,65 @@
+src/
+│
+├── app/
+│   ├── store.js
+│   ├── routes.jsx
+│   └── providers.jsx
+│
+├── modules/
+│   ├── tasks/
+│   │   ├── components/
+│   │   │   ├── TaskCard.jsx
+│   │   │   ├── TaskForm.jsx
+│   │   │   └── TaskList.jsx
+│   │   ├── hooks/
+│   │   │   └── useTasks.js
+│   │   ├── services/
+│   │   │   └── tasks.api.js
+│   │   ├── state/
+│   │   │   └── tasks.slice.js   // or Zustand store, or React Query keys
+│   │   ├── utils/
+│   │   │   └── task.helpers.js
+│   │   ├── pages/
+│   │   │   ├── TasksPage.jsx
+│   │   │   └── TaskDetailsPage.jsx
+│   │   └── index.js
+│   │
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── state/
+│   │   ├── pages/
+│   │   └── utils/
+│   │
+│   └── ...other modules
+│
+├── components/        // global reusable UI
+│   ├── Button.jsx
+│   ├── Modal.jsx
+│   └── Input.jsx
+│
+├── hooks/             // global hooks
+│   └── useFetch.js
+│
+├── layouts/
+│   ├── DashboardLayout.jsx
+│   └── AuthLayout.jsx
+│
+├── services/          // global API utilities
+│   ├── api.js
+│   └── auth.js
+│
+├── utils/             // global utilities
+│   ├── date.js
+│   ├── validators.js
+│   └── constants.js
+│
+├── assets/
+│   ├── images/
+│   ├── icons/
+│   └── styles/
+│       ├── globals.css
+│       └── variables.css
+│
+└── index.js
