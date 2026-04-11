@@ -1,6 +1,6 @@
-#  Project Structure Overview
+# 📁 Project Structure Overview (Zustand Version)
 
-This document explains the role of each folder in the React module‑based architecture.
+This document explains the role of each folder in the React module‑based architecture using Zustand for state management.
 
 ---
 
@@ -13,13 +13,15 @@ Root directory containing all source code for the application.
 Global application layer — responsible for wiring the entire app together.
 
 - **store.js**  
-  Global store configuration (Redux, Zustand, etc.).
+  Optional global store setup (only if you have shared global state).  
+  With Zustand, most state lives inside modules, so this file may be minimal or unused.
 
 - **routes.jsx**  
   Central routing configuration for all modules.
 
 - **providers.jsx**  
-  Wraps the app with global providers (store, query client, theme, etc.).
+  Wraps the app with global providers (React Query, Theme, etc.).  
+  Zustand does **not** require a provider.
 
 This folder defines the *infrastructure* of the application.
 
@@ -44,8 +46,9 @@ A module contains everything related to its domain.
   (e.g., `tasks.api.js`).
 
 - **state/**  
-  State management for this module  
-  (Redux slice, Zustand store, React Query keys).
+  Zustand store for this module  
+  (e.g., `tasks.store.js`).  
+  This is where the module keeps its state, actions, and selectors.
 
 - **utils/**  
   Helpers and utilities specific to tasks  
@@ -96,7 +99,7 @@ Useful for consistent structure across sections of the app.
 Global API utilities.
 
 - **api.js**  
-  Axios instance + interceptors.
+  Axios instance + interceptors (token injection, refresh logic).
 
 - **auth.js**  
   Optional global authentication helpers.
