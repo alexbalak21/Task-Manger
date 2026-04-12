@@ -2,7 +2,8 @@ from model.Status import Status
 from extensions.db import db
 
 def seed_status():
-    statuses = ["Pending", "Awaiting", "In Progress", "On Hold", "Completed", "Cancelled"]
+    # "Pending", "Awaiting", "In Progress", "On Hold", "Completed", "Cancelled"
+    statuses = ["Pending", "In Progress" "Completed"]
 
     for name in statuses:
         existing = Status.query.filter_by(name=name).first()
