@@ -1,5 +1,6 @@
-from flask import Flask, send_file
+from flask import Flask, jsonify, send_file
 import os
+from werkzeug.exceptions import HTTPException
 from config.config import Config
 from extensions.db import db
 from extensions.bcrypt import bcrypt
@@ -15,6 +16,8 @@ from seed.seed_status import seed_status
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    # Keep Flask from re-raising exceptions into the HTML debugger.
+    app.config["PROPAGATE_EXCEPTIONS"] = False
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
@@ -31,6 +34,25 @@ def create_app():
     def docs():
         doc_path = os.path.join(os.path.dirname(__file__), "api_doc.md")
         return send_file(doc_path, mimetype="text/markdown")
+
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(e):
+        # Return structured JSON for expected HTTP errors like 400 or 404.
+        return jsonify({
+            "error": e.name,
+            "message": e.description,
+            "status": e.code,
+        }), e.code
+
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        # Return a generic JSON payload for unexpected server errors.
+        app.logger.exception("Unhandled exception")
+        return jsonify({
+            "error": "Internal Server Error",
+            "message": "An unexpected error occurred.",
+            "status": 500,
+        }), 500
 
     # Initialize database and seed data (only in development or if db is accessible)
     with app.app_context():

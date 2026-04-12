@@ -1,4 +1,5 @@
 from repository.UserRepository import UserRepository
+from model.User import User
 from utils.dto import user_to_dto
 
 
@@ -34,9 +35,7 @@ class UserService:
         if UserRepository.find_by_email(data["email"]):
             return False, "Email already in use"
 
-        user = UserRepository.create(
-            name=data["name"],
-            email=data["email"],
-            password=data["password"]
-        )
+        user = User(name=data["name"], email=data["email"])
+        user.set_password(data["password"])
+        UserRepository.save(user)
         return True, "User registered successfully"

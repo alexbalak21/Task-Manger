@@ -43,3 +43,13 @@ GET {{baseUrl}}/api/tasks
 Authorization: Bearer {{loginAccess_token}}
 
 
+### REGISTER USER REQUEST ###
+# @name registerUser
+POST {{baseUrl}}/api/user/register
+Content-Type: application/json
+
+{
+    "name": "Max Payne",
+    "email": "max.payne@example.com",
+    "password": "password@1234"
+}
