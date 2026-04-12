@@ -137,6 +137,7 @@ Notes:
   - `description` (string, optional)
   - `priority_id` (integer, required)
   - `status_id` (integer, required)
+  - `start_date` (ISO datetime string, optional)
   - `due_date` (ISO datetime string, optional)
 - Success:
   - `201 Created`
@@ -155,6 +156,7 @@ Notes:
   - `description` (string, optional)
   - `priority_id` (integer, optional)
   - `status_id` (integer, optional)
+  - `start_date` (ISO datetime string, optional)
   - `due_date` (ISO datetime string, optional)
 - Success:
   - `200 OK`
@@ -187,6 +189,7 @@ Returned by TaskController `task_to_dto(task)`:
 - `description`
 - `priority_id`
 - `status_id`
+- `start_date` (ISO string or null)
 - `due_date` (ISO string or null)
 - `created_at` (ISO string or null)
 - `updated_at` (ISO string or null)

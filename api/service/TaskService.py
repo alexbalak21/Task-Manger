@@ -6,7 +6,7 @@ from datetime import datetime
 
 class TaskService:
 	@staticmethod
-	def _parse_due_date(value):
+	def _parse_datetime_field(value, field_name):
 		if value is None:
 			return None
 		if isinstance(value, datetime):
@@ -16,8 +16,8 @@ class TaskService:
 			try:
 				return datetime.fromisoformat(date_value)
 			except ValueError:
-				raise ValueError("due_date must be a valid ISO datetime string")
-		raise ValueError("due_date must be an ISO datetime string")
+				raise ValueError(f"{field_name} must be a valid ISO datetime string")
+		raise ValueError(f"{field_name} must be an ISO datetime string")
 
 	@staticmethod
 	def get_all():
@@ -51,7 +51,8 @@ class TaskService:
 			description=data.get("description"),
 			priority_id=data["priority_id"],
 			status_id=data["status_id"],
-			due_date=TaskService._parse_due_date(data.get("due_date"))
+			start_date=TaskService._parse_datetime_field(data.get("start_date"), "start_date"),
+			due_date=TaskService._parse_datetime_field(data.get("due_date"), "due_date")
 		)
 		return TaskRepository.create(task)
 
@@ -71,8 +72,10 @@ class TaskService:
 			if not status:
 				raise ValueError("Invalid status_id")
 			task.status_id = data["status_id"]
+		if "start_date" in data:
+			task.start_date = TaskService._parse_datetime_field(data["start_date"], "start_date")
 		if "due_date" in data:
-			task.due_date = TaskService._parse_due_date(data["due_date"])
+			task.due_date = TaskService._parse_datetime_field(data["due_date"], "due_date")
 		TaskRepository.update(task)
 		return task
 
