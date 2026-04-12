@@ -1,5 +1,6 @@
 from repository.UserRepository import UserRepository
 from model.User import User
+from service.ProfileImageService import ProfileImageService
 from utils.dto import user_to_dto
 
 
@@ -31,11 +32,20 @@ class UserService:
         return True, "Password updated"
     
     @staticmethod
-    def register_user(data):
+    def register_user(data, profile_image=None):
         if UserRepository.find_by_email(data["email"]):
             return False, "Email already in use"
+
+        processed_image = None
+        if profile_image and getattr(profile_image, "filename", ""):
+            processed_image, image_error = ProfileImageService.process_profile_image(profile_image)
+            if image_error:
+                return False, image_error
 
         user = User(name=data["name"], email=data["email"])
         user.set_password(data["password"])
         UserRepository.save(user)
+
+        if processed_image:
+            ProfileImageService.save_for_user(user.id, processed_image)
         return True, "User registered successfully"

@@ -53,3 +53,58 @@ Content-Type: application/json
     "email": "max.payne@example.com",
     "password": "password@1234"
 }
+
+### REGISTER AUTH (JSON) ###
+# @name registerAuthJson
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "password": "password@1234"
+}
+
+### REGISTER AUTH (MULTIPART + IMAGE) ###
+# @name registerAuthWithImage
+POST {{baseUrl}}/api/auth/register
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Alice Image
+--WebAppBoundary
+Content-Disposition: form-data; name="email"
+
+alice.image@example.com
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+
+password@1234
+--WebAppBoundary
+Content-Disposition: form-data; name="profile_image"; filename="avatar.png"
+Content-Type: image/png
+
+< ../images/avatar.png
+--WebAppBoundary--
+
+
+### REGISTER AUTH (MULTIPART NO IMAGE) ###
+# @name registerAuthMultipartNoImage
+POST {{baseUrl}}/api/auth/register
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Alice NoImage
+--WebAppBoundary
+Content-Disposition: form-data; name="email"
+
+alice.noimage@example.com
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+
+password@1234
+--WebAppBoundary--

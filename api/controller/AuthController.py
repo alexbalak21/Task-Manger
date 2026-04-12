@@ -7,9 +7,22 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 @auth_bp.post("/register")
 def register():
-    data = request.json
+    data = request.get_json(silent=True) or {}
+    profile_image = None
+
+    if request.content_type and request.content_type.startswith("multipart/form-data"):
+        data = request.form
+        uploaded_file = request.files.get("profile_image")
+        if uploaded_file and uploaded_file.filename:
+            profile_image = uploaded_file
+
+    required_fields = ["name", "email", "password"]
+    missing_fields = [field for field in required_fields if not data.get(field)]
+    if missing_fields:
+        return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
+
     result, error = AuthService.register(
-        data["name"], data["email"], data["password"]
+        data["name"], data["email"], data["password"], profile_image
     )
     if error:
         return jsonify({"error": error}), 400
