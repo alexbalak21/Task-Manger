@@ -28,3 +28,15 @@ class UserService:
         user.set_password(new)
         UserRepository.save(user)
         return True, "Password updated"
+    
+    @staticmethod
+    def register_user(data):
+        if UserRepository.find_by_email(data["email"]):
+            return False, "Email already in use"
+
+        user = UserRepository.create(
+            name=data["name"],
+            email=data["email"],
+            password=data["password"]
+        )
+        return True, "User registered successfully"

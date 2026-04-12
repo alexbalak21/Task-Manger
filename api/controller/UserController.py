@@ -35,3 +35,13 @@ def change_password():
         return jsonify({"error": msg}), 400
 
     return jsonify({"success": True, "message": msg})
+
+
+@user_bp.post("/register")
+def register_user():
+    data = request.json
+    ok, msg = UserService.register_user(data)
+    if not ok:
+        return jsonify({"error": msg}), 400
+
+    return jsonify({"success": True, "message": msg})
