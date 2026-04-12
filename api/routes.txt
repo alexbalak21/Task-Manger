@@ -1,0 +1,20 @@
+GET /
+GET /api/docs
+
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/refresh
+POST /api/auth/logout
+
+GET /api/user
+PUT /api/user
+POST /api/user/password
+
+GET /api/tasks
+GET /api/tasks/<int:task_id>
+POST /api/tasks
+PUT /api/tasks/<int:task_id>
+DELETE /api/tasks/<int:task_id>
+
+# Legacy (App_new.py)
+GET /

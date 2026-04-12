@@ -1,5 +1,10 @@
-export default function App() {
+import { AppProviders } from "./providers";
+import { AppRoutes } from "./routes";
+
+export function App() {
   return (
-    <div>App</div>
-  )
+    <AppProviders>
+      <AppRoutes />
+    </AppProviders>
+  );
 }
