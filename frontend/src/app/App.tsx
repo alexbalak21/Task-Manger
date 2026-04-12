@@ -8,3 +8,5 @@ export function App() {
     </AppProviders>
   );
 }
+
+export default App;
