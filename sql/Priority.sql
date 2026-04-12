@@ -1,0 +1,8 @@
+-- Priority table
+CREATE TABLE IF NOT EXISTS `priority` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create index for name lookups
+CREATE INDEX `idx_priority_name` ON `priority` (`name`);
