@@ -28,3 +28,6 @@ class Config:
 
     # CORS Configuration
     CORS_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
+    STATIC_FOLDER = os.getenv("STATIC_FOLDER", "frontend")
+    STATIC_URL_PATH = os.getenv("STATIC_URL_PATH", "")

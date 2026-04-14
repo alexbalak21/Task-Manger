@@ -5,6 +5,7 @@ from config.config import Config
 from extensions.db import db
 from extensions.bcrypt import bcrypt
 from extensions.jwt import jwt
+from controller.HomeController import home_blueprint
 from controller.AuthController import auth_bp
 from controller.UserController import user_bp
 from controller.TaskController import task_bp
@@ -14,19 +15,26 @@ from seed.seed_status import seed_status
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
+    # Load config first to get static folder and url path
+    config = Config
+    app = Flask(
+        __name__,
+        static_folder=config.STATIC_FOLDER,
+        static_url_path=config.STATIC_URL_PATH
+    )
+    app.config.from_object(config)
     # Keep Flask from re-raising exceptions into the HTML debugger.
     app.config["PROPAGATE_EXCEPTIONS"] = False
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    app.register_blueprint(home_blueprint)
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(task_bp)
 
-    @app.get("/")
+    @app.get("/health")
     def health():
         return {"status": "Server is running"}
 
