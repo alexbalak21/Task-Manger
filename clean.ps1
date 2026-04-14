@@ -1,8 +1,8 @@
 # Path to your API folder
-$apiPath = "api"
-$env:FLASK_APP = "api/App.py"
+$apiPath = "app"
+$env:FLASK_APP = "app/App.py"
 
-# Find all __pycache__ directories inside /api and delete them
+# Find all __pycache__ directories inside /app and delete them
 Get-ChildItem -Path $apiPath -Recurse -Directory -Filter "__pycache__" |
     ForEach-Object {
         Write-Host "Deleting:" $_.FullName
