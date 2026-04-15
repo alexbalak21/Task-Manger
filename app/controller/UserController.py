@@ -4,17 +4,17 @@ from service.UserService import UserService
 from repository.UserRepository import UserRepository
 from middleware.admin_required import admin_required
 
-user_bp = Blueprint("user", __name__, url_prefix="/api/user")
+user_bp = Blueprint("user", __name__, url_prefix="/api/")
 
 
-@user_bp.get("")
+@user_bp.get("user")
 @jwt_required()
 def get_user():
     user_id = int(get_jwt_identity())
     return jsonify(UserService.get_user(user_id))
 
 
-@user_bp.put("")
+@user_bp.put("user")
 @jwt_required()
 def update_user():
     user_id = int(get_jwt_identity())
@@ -22,7 +22,7 @@ def update_user():
     return jsonify(UserService.update_user(user_id, data))
 
 
-@user_bp.post("/password")
+@user_bp.post("user/password")
 @jwt_required()
 def change_password():
     user_id = int(get_jwt_identity())
@@ -38,13 +38,13 @@ def change_password():
     return jsonify({"success": True, "message": msg})
 
 
-@user_bp.get("/all")
-@admin_required
+@user_bp.get("users")
+@jwt_required()
 def get_all_users():
     return jsonify(UserService.get_all_users())
 
 
-@user_bp.post("/register")
+@user_bp.post("user/register")
 def register_user():
     data = request.get_json(silent=True) or {}
     profile_image = None

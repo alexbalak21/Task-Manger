@@ -15,7 +15,7 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "john.doe@example.com",
+    "email": "gordon.freeman@example.com",
     "password": "password@1234"
 }
 
@@ -25,9 +25,14 @@ Content-Type: application/json
 
 ### GET ALL USERS REQUEST ###
 # @name getAllUsers
-GET {{baseUrl}}/api/user/all
+GET {{baseUrl}}/api/users
 Authorization: Bearer {{loginAccess_token}}
 
+
+### GET ALL TASKS REQUEST ###
+# @name getAllTasks
+GET {{baseUrl}}/api/tasks
+Authorization: Bearer {{loginAccess_token}}
 
 ### CREATE TASK REQUEST ###
 # @name createTask
@@ -73,8 +78,8 @@ POST {{baseUrl}}/api/user/register
 Content-Type: application/json
 
 {
-    "name": "Lara Croft",
-    "email": "lara.croft@example.com",
+    "name": "Gordon Freeman",
+    "email": "gordon.freeman@example.com",
     "password": "password@1234"
 }
 
