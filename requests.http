@@ -1,5 +1,5 @@
 @baseUrl = http://127.0.0.1:5000
-@baseUrl = https://task-manager-app.alwaysdata.net
+# @baseUrl = https://task-manager-app.alwaysdata.net
 
 # Tokens from login
 @loginAccess_token = ""
@@ -22,6 +22,12 @@ Content-Type: application/json
 ### VARIABLE EXTRACTION ###
 @loginAccess_token = {{login.response.body.access_token}}
 @loginRefresh_token = {{login.response.body.refresh_token}}
+
+### GET ALL USERS REQUEST ###
+# @name getAllUsers
+GET {{baseUrl}}/api/user/all
+Authorization: Bearer {{loginAccess_token}}
+
 
 ### CREATE TASK REQUEST ###
 # @name createTask
@@ -50,8 +56,8 @@ POST {{baseUrl}}/api/user/register
 Content-Type: application/json
 
 {
-    "name": "Max Payne",
-    "email": "max.payne@example.com",
+    "name": "Lara Croft",
+    "email": "lara.croft@example.com",
     "password": "password@1234"
 }
 

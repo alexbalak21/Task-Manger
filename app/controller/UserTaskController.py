@@ -1,21 +1,9 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from service.UserTaskService import UserTaskService
-from repository.UserRepository import UserRepository
-from repository.TaskRepository import TaskRepository
+from middleware.admin_required import admin_required
 
 user_task_bp = Blueprint("user_task", __name__, url_prefix="/api/user-tasks")
-
-def admin_required(fn):
-    @jwt_required()
-    def wrapper(*args, **kwargs):
-        user_id = get_jwt_identity()
-        user = UserRepository.find_by_id(user_id)
-        if not user or user.role != "admin":
-            return jsonify({"error": "Admin access required"}), 403
-        return fn(*args, **kwargs)
-    wrapper.__name__ = fn.__name__
-    return wrapper
 
 # Assign user to task (admin only)
 @user_task_bp.post("/assign")
