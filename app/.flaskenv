@@ -1,6 +1,6 @@
 MYSQL_HOST=mysql-task-manager-app.alwaysdata.net
 MYSQL_USER=task-manager-app
-MYSQL_PASSWORD =J7o0e_4diDiw-Pf29,hcEJQOQ:aVXuTohxPClh
+MYSQL_PASSWORD=J7o0e_4diDiw-Pf29,hcEJQOQ:aVXuTohxPClh
 MYSQL_DB=task-manager-app_db
 FLASK_DEBUG=1
 SECRET_KEY=9fe86bcaa9c308ee175e68bae93e38a33a64fd3a6c7927b3a3930a4905f3cb94
