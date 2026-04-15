@@ -66,7 +66,6 @@ class TaskService:
 			raise ValueError("Invalid status_id")
 
 		user_ids = TaskService._parse_id_list_field(data.get("users"), "users")
-		todo_ids = TaskService._parse_id_list_field(data.get("todos"), "todos")
 
 		users = []
 		if user_ids:
@@ -75,14 +74,6 @@ class TaskService:
 			missing_user_ids = [user_id for user_id in user_ids if user_id not in found_user_ids]
 			if missing_user_ids:
 				raise ValueError(f"Invalid user IDs: {missing_user_ids}")
-
-		todos = []
-		if todo_ids:
-			todos = Todo.query.filter(Todo.id.in_(todo_ids)).all()
-			found_todo_ids = {todo.id for todo in todos}
-			missing_todo_ids = [todo_id for todo_id in todo_ids if todo_id not in found_todo_ids]
-			if missing_todo_ids:
-				raise ValueError(f"Invalid todo IDs: {missing_todo_ids}")
 
 		task = Task(
 			title=data["title"],
@@ -100,8 +91,30 @@ class TaskService:
 			if users:
 				task.users = users
 
-			for todo in todos:
-				todo.task_id = task.id
+			# Handle todos: can be array of IDs or array of strings (text)
+			if "todos" in data and data["todos"]:
+				todos_data = data["todos"]
+				if not isinstance(todos_data, list):
+					raise ValueError("todos must be an array")
+				
+				for todo_item in todos_data:
+					if isinstance(todo_item, str):
+						# Create new todo from string text
+						todo = Todo(
+							text=todo_item,
+							task_id=task.id,
+							in_progress=False,
+							completed=False
+						)
+						db.session.add(todo)
+					elif isinstance(todo_item, int):
+						# Link existing todo by ID
+						existing_todo = Todo.query.get(todo_item)
+						if not existing_todo:
+							raise ValueError(f"Invalid todo ID: {todo_item}")
+						existing_todo.task_id = task.id
+					else:
+						raise ValueError("todos must contain strings or integer IDs")
 
 			db.session.commit()
 			return task

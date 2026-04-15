@@ -51,13 +51,14 @@ Content-Type: application/json
 Authorization: Bearer {{loginAccess_token}}
 
 {
-    "title": "New Task",
-    "description": "This is a new task created via API and assigned to users.",
+    "title": "Task with users & todos",
+    "description": "Test task with users and todos assigned directly in the creation request.",
     "priority_id": 1,
     "status_id": 1,
     "start_date": "2026-03-25T09:00:00",
     "due_date": "2026-03-30T10:00:00",
-    "users": [2, 3, 4]
+    "users": [2, 3, 4],
+    "todos": ["todo 1", "todo 2", "todo 3"]
 }
 
 ### GET TASKS REQUEST ###

@@ -55,6 +55,26 @@ class TodoService:
 		TodoRepository.delete(todo)
 
 	@staticmethod
+	def create_bulk(todos_data, task_id):
+		"""
+		Create multiple todos for a task.
+		todos_data: list of strings (todo text)
+		task_id: the task ID to associate todos with
+		Returns: list of created Todo objects
+		"""
+		created_todos = []
+		for text in todos_data:
+			todo = Todo(
+				text=text,
+				task_id=task_id,
+				in_progress=False,
+				completed=False
+			)
+			TodoRepository.create(todo, commit=False)
+			created_todos.append(todo)
+		return created_todos
+
+	@staticmethod
 	def _parse_datetime_field(value, field_name):
 		if value is None:
 			return None
