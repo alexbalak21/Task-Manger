@@ -2,20 +2,22 @@
 
 ## Overview
 
-Task Manager is a Flask-based REST API for managing users and tasks. It uses SQLAlchemy for ORM, JWT for authentication, and supports user profile images. The API is organized into controllers, models, and services.
+
+Task Manager is a Flask-based REST API for managing users, tasks, todos, comments, attachments, and user profile images. It uses SQLAlchemy for ORM, JWT for authentication, and supports admin/user roles. The API is organized into controllers, models, and services.
 
 ---
 
 ## App Structure
 - **Entrypoint:** `App.py`
-- **Blueprints:**
+
+**Blueprints:**
   - `/api/auth` (AuthController)
   - `/api/user` (UserController)
   - `/api/tasks` (TaskController)
   - `/api/todos` (TodoController)
   - `/api/user-tasks` (UserTaskController)
-- **Other routes:**
-  - `/` (health check)
+**Other routes:**
+  - `/health` (health check)
   - `/api/docs` (serves this documentation)
 
 ---
@@ -27,12 +29,8 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
 
 ---
 
-## Models
-### UserTask (Association Table: `users_tasks`)
-- `user_id`: int, FK to User, part of PK
-- `task_id`: int, FK to Task, part of PK
-This table enables the many-to-many relationship between users and tasks. Each row represents an assignment of a user to a task.
 
+## Models
 ### User
 - `id`: int, primary key
 - `name`: string, required
@@ -47,25 +45,13 @@ This table enables the many-to-many relationship between users and tasks. Each r
 - `title`: string, required
 - `description`: text, optional
 - `priority_id`: int, FK to Priority
+- `priority_obj`: relationship to Priority
 - `status_id`: int, FK to Status
+- `status_obj`: relationship to Status
 - `start_date`, `due_date`: datetime, optional
 - `created_at`, `updated_at`: datetime
 - `users`: many-to-many with User (via UserTask association table `users_tasks`)
-
-### Priority
-- `id`: int, primary key
-- `name`: string, unique, required
-
-### Status
-- `id`: int, primary key
-- `name`: string, unique, required
-
-### Comment
-- `id`: int, primary key
-- `content`: text, required
-- `user_id`: int, FK to User
-- `task_id`: int, FK to Task
-- `created_at`: datetime
+- `todos`: one-to-many with Todo
 
 ### Todo
 - `id`: int, primary key
@@ -73,15 +59,45 @@ This table enables the many-to-many relationship between users and tasks. Each r
 - `in_progress`: bool
 - `completed`: bool
 - `worked_by`: int, FK to User
+- `worked_by_user`: relationship to User
 - `completed_at`: datetime
 - `task_id`: int, FK to Task
 - `created_at`, `updated_at`: datetime
+- `task`: relationship to Task
 
-### Attachments
+### Priority
+- `id`: int, primary key
+- `name`: string, unique, required
+- `tasks`: reverse relationship to Task
+
+### Status
+- `id`: int, primary key
+- `name`: string, unique, required
+- `tasks`: reverse relationship to Task
+
+### Comment
+- `id`: int, primary key
+- `content`: text, required
+- `user_id`: int, FK to User
+- `user`: relationship to User
+- `task_id`: int, FK to Task
+- `created_at`: datetime
+
+### Attachment
 - `id`: int, primary key
 - `text`: text, required
 - `created_by`: int, FK to User
+- `user`: relationship to User
 - `created_at`: datetime
+
+### Task_Attachments (Association Table)
+- `task_id`: int, FK to Task, part of PK
+- `attachment_id`: int, FK to Attachment, part of PK
+
+### UserTask (Association Table: `users_tasks`)
+- `user_id`: int, FK to User, part of PK
+- `task_id`: int, FK to Task, part of PK
+This table enables the many-to-many relationship between users and tasks. Each row represents an assignment of a user to a task.
 
 ### UserProfileImage
 - `user_id`: int, FK to User, primary key
@@ -91,6 +107,7 @@ This table enables the many-to-many relationship between users and tasks. Each r
 
 ## Controllers & Routes
 
+
 ### AuthController (`/api/auth`)
 - `POST /register`: Register new user, returns tokens and user
 - `POST /login`: Authenticate, returns tokens and user
@@ -98,10 +115,11 @@ This table enables the many-to-many relationship between users and tasks. Each r
 - `POST /logout`: Logout (JWT required)
 
 ### UserController (`/api/user`)
-- `GET /`: Get current user info (JWT required)
-- `PUT /`: Update user info (JWT required)
-- `POST /password`: Change password (JWT required)
-- `POST /register`: Register user (alternative to AuthController)
+- `GET /user`: Get current user info (JWT required)
+- `PUT /user`: Update user info (JWT required)
+- `POST /user/password`: Change password (JWT required)
+- `GET /users`: List all users (JWT required)
+- `POST /user/register`: Register user (alternative to AuthController)
 
 ### TaskController (`/api/tasks`)
 - `GET /`: List all tasks (JWT required)
@@ -114,7 +132,7 @@ This table enables the many-to-many relationship between users and tasks. Each r
 - `GET /`: List all todos (JWT required)
 - `GET /task/<task_id>`: List todos for a task (JWT required)
 - `GET /<todo_id>`: Get todo by ID (JWT required)
-- `POST /`: Create todo (JWT required)
+- `POST /`: Create todo (admin only)
 - `PUT /<todo_id>`: Update todo (JWT required)
 - `DELETE /<todo_id>`: Delete todo (admin only)
 
@@ -167,22 +185,25 @@ This table enables the many-to-many relationship between users and tasks. Each r
 
 ## DTO Shapes
 
+
 ### User DTO
-- Fields: id, name, email, role, created_at, updated_at, etc.
+- Fields: id, name, email, role, created_at, updated_at
 
 ### Task DTO
-- Fields: id, title, description, priority_id, status_id, start_date, due_date, created_at, updated_at
+- Fields: id, title, description, priority_id, status_id, start_date, due_date, created_at, updated_at, users (list of user ids), todos (list of todo ids)
 
 ### Todo DTO
 - Fields: id, text, in_progress, completed, worked_by, completed_at, task_id, created_at, updated_at
 
 ---
 
+
 ## Status & Priority
 - Statuses: Pending, Awaiting, Scheduled, In Progress, On Hold, Blocked, Completed, Cancelled
 - Priorities: Low, Medium, High
 
 ---
+
 
 ## Error Handling
 - 404: JSON error for API routes, React index.html for frontend
@@ -191,9 +212,10 @@ This table enables the many-to-many relationship between users and tasks. Each r
 
 ---
 
+
 ## Security
 - JWT required for most routes
-- Admin-only actions for task creation/deletion
+- Admin-only actions for task and todo creation/deletion, user-task assignment
 - Passwords hashed with bcrypt
 
 ---
