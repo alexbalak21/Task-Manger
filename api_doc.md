@@ -13,6 +13,7 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
   - `/api/user` (UserController)
   - `/api/tasks` (TaskController)
   - `/api/todos` (TodoController)
+  - `/api/user-tasks` (UserTaskController)
 - **Other routes:**
   - `/` (health check)
   - `/api/docs` (serves this documentation)
@@ -27,6 +28,9 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
 ---
 
 ## Models
+### UserTask (Association Table)
+- `user_id`: int, FK to User, PK
+- `task_id`: int, FK to Task, PK
 
 ### User
 - `id`: int, primary key
@@ -113,6 +117,12 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
 - `PUT /<todo_id>`: Update todo (JWT required)
 - `DELETE /<todo_id>`: Delete todo (admin only)
 
+### UserTaskController (`/api/user-tasks`)
+- `POST /assign`: Assign user to task (admin only)
+- `POST /unassign`: Unassign user from task (admin only)
+- `GET /task/<task_id>`: Get user IDs assigned to a task (JWT required)
+- `GET /user/<user_id>`: Get task IDs assigned to a user (JWT required)
+
 ---
 
 ## Services
@@ -141,6 +151,12 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
 - `create(data)`: Create todo (validates fields)
 - `update(todo, data)`: Update todo fields
 - `delete(todo)`: Delete todo
+
+### UserTaskService
+- `assign_user_to_task(user_id, task_id)`: Assign user to task
+- `unassign_user_from_task(user_id, task_id)`: Unassign user from task
+- `get_users_for_task(task_id)`: Get user IDs for a task
+- `get_tasks_for_user(user_id)`: Get task IDs for a user
 
 ### ProfileImageService
 - `process_profile_image(file_storage)`: Validate, resize, and encode image
@@ -242,6 +258,38 @@ Authorization: Bearer <user_token>
 ```
 DELETE /api/todos/5
 Authorization: Bearer <admin_token>
+```
+
+### Assign User to Task (admin)
+```
+POST /api/user-tasks/assign
+Authorization: Bearer <admin_token>
+{
+  "user_id": 2,
+  "task_id": 1
+}
+```
+
+### Unassign User from Task (admin)
+```
+POST /api/user-tasks/unassign
+Authorization: Bearer <admin_token>
+{
+  "user_id": 2,
+  "task_id": 1
+}
+```
+
+### Get Users for a Task
+```
+GET /api/user-tasks/task/1
+Authorization: Bearer <user_token>
+```
+
+### Get Tasks for a User
+```
+GET /api/user-tasks/user/2
+Authorization: Bearer <user_token>
 ```
 
 ---
