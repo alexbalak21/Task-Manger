@@ -56,34 +56,47 @@ flask --app App init-db
 
 ## API Endpoints
 
-### Health
 
-- `GET /` - returns `{"status": "Server is running"}`
+### Health
+- `GET /` - returns `{ "status": "Server is running" }`
 - `GET /api/docs` - serves the API markdown documentation
 
 ### Auth
-
 - `POST /api/auth/register` - register a new user
 - `POST /api/auth/login` - log in and receive tokens
 - `POST /api/auth/refresh` - exchange a refresh token for new tokens
 - `POST /api/auth/logout` - logout protected by JWT
 
 ### User
-
 - `GET /api/user` - get the current authenticated user
 - `PUT /api/user` - update the current authenticated user
 - `POST /api/user/password` - change the current user's password
 
 ### Tasks
-
 - `GET /api/tasks` - list tasks for authenticated users
 - `GET /api/tasks/<task_id>` - get a task by id
 - `POST /api/tasks` - create a task, admin only
 - `PUT /api/tasks/<task_id>` - update a task
 - `DELETE /api/tasks/<task_id>` - delete a task, admin only
 
+### Todos
+- `GET /api/todos` - list all todos (JWT required)
+- `GET /api/todos/task/<task_id>` - list todos for a task (JWT required)
+- `GET /api/todos/<todo_id>` - get a todo by id (JWT required)
+- `POST /api/todos` - create a todo (JWT required)
+- `PUT /api/todos/<todo_id>` - update a todo (JWT required)
+- `DELETE /api/todos/<todo_id>` - delete a todo (admin only)
+
+### User-Task Assignment
+- `POST /api/user-tasks/assign` - assign a user to a task (admin only)
+- `POST /api/user-tasks/unassign` - unassign a user from a task (admin only)
+- `GET /api/user-tasks/task/<task_id>` - get user IDs assigned to a task (JWT required)
+- `GET /api/user-tasks/user/<user_id>` - get task IDs assigned to a user (JWT required)
+
 ## Notes
 
 - Task create and delete actions require an admin user.
+- Todo delete actions require an admin user.
+- Assigning/unassigning users to tasks requires an admin user.
 - Authentication uses JWT access and refresh tokens.
 - Seed data is loaded from the files in [api/seed](api/seed).

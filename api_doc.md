@@ -28,9 +28,10 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
 ---
 
 ## Models
-### UserTask (Association Table)
-- `user_id`: int, FK to User, PK
-- `task_id`: int, FK to Task, PK
+### UserTask (Association Table: `users_tasks`)
+- `user_id`: int, FK to User, part of PK
+- `task_id`: int, FK to Task, part of PK
+This table enables the many-to-many relationship between users and tasks. Each row represents an assignment of a user to a task.
 
 ### User
 - `id`: int, primary key
@@ -49,7 +50,7 @@ Task Manager is a Flask-based REST API for managing users and tasks. It uses SQL
 - `status_id`: int, FK to Status
 - `start_date`, `due_date`: datetime, optional
 - `created_at`, `updated_at`: datetime
-- `users`: many-to-many with User
+- `users`: many-to-many with User (via UserTask association table `users_tasks`)
 
 ### Priority
 - `id`: int, primary key
