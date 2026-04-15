@@ -44,6 +44,22 @@ Authorization: Bearer {{loginAccess_token}}
     "due_date": "2026-03-30T10:00:00"
 }
 
+### CREATE TASK WITH USERS REQUEST ###
+# @name createTaskWithUsers
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+Authorization: Bearer {{loginAccess_token}}
+
+{
+    "title": "New Task",
+    "description": "This is a new task created via API and assigned to users.",
+    "priority_id": 1,
+    "status_id": 1,
+    "start_date": "2026-03-25T09:00:00",
+    "due_date": "2026-03-30T10:00:00",
+    "users": [2, 3, 4]
+}
+
 ### GET TASKS REQUEST ###
 # @name getTasks
 GET {{baseUrl}}/api/tasks

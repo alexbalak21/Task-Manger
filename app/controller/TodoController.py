@@ -1,9 +1,20 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from service.TodoService import TodoService
-from middleware.admin_required import admin_required
+from repository.UserRepository import UserRepository
 
 todo_bp = Blueprint("todo", __name__, url_prefix="/api/todos")
+
+def admin_required(fn):
+	@jwt_required()
+	def wrapper(*args, **kwargs):
+		user_id = get_jwt_identity()
+		user = UserRepository.find_by_id(user_id)
+		if not user or user.role != "admin":
+			return jsonify({"error": "Admin access required"}), 403
+		return fn(*args, **kwargs)
+	wrapper.__name__ = fn.__name__
+	return wrapper
 
 # GET all todos
 @todo_bp.get("")
@@ -30,7 +41,7 @@ def get_todo(todo_id):
 
 # CREATE todo
 @todo_bp.post("")
-@jwt_required()
+@admin_required
 def create_todo():
 	data = request.json
 	try:
