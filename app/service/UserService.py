@@ -2,14 +2,14 @@ from repository.UserRepository import UserRepository
 from model.User import User
 from service.ProfileImageService import ProfileImageService
 from utils.dto import user_to_dto
+from utils.dto import user_to_basic_dto
 
 
 class UserService:
 
     @staticmethod
     def get_all_users():
-        users = UserRepository.get_all()
-        return [user_to_dto(user) for user in users]
+        return UserRepository.get_all_basic()
 
     @staticmethod
     def get_user(user_id):
