@@ -7,6 +7,11 @@ from utils.dto import user_to_dto
 class UserService:
 
     @staticmethod
+    def get_all_users():
+        users = UserRepository.get_all()
+        return [user_to_dto(user) for user in users]
+
+    @staticmethod
     def get_user(user_id):
         user = UserRepository.find_by_id(user_id)
         return user_to_dto(user)

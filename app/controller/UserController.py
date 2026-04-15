@@ -6,6 +6,19 @@ from repository.UserRepository import UserRepository
 user_bp = Blueprint("user", __name__, url_prefix="/api/user")
 
 
+def admin_required(fn):
+    @jwt_required()
+    def wrapper(*args, **kwargs):
+        user_id = int(get_jwt_identity())
+        user = UserRepository.find_by_id(user_id)
+        if not user or user.role != "admin":
+            return jsonify({"error": "Admin access required"}), 403
+        return fn(*args, **kwargs)
+
+    wrapper.__name__ = fn.__name__
+    return wrapper
+
+
 @user_bp.get("")
 @jwt_required()
 def get_user():
@@ -35,6 +48,12 @@ def change_password():
         return jsonify({"error": msg}), 400
 
     return jsonify({"success": True, "message": msg})
+
+
+@user_bp.get("/all")
+@admin_required
+def get_all_users():
+    return jsonify(UserService.get_all_users())
 
 
 @user_bp.post("/register")

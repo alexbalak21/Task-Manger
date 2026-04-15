@@ -13,6 +13,10 @@ class UserRepository:
         return User.query.get(user_id)
 
     @staticmethod
+    def get_all():
+        return User.query.all()
+
+    @staticmethod
     def save(user):
         db.session.add(user)
         db.session.commit()

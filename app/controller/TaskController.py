@@ -77,6 +77,8 @@ def task_to_dto(task):
 		"status_id": task.status_id,
 		"start_date": task.start_date.isoformat() if task.start_date else None,
 		"due_date": task.due_date.isoformat() if task.due_date else None,
+		"users": [user.id for user in task.users],
+		"todos": [todo.id for todo in task.todos],
 		"created_at": task.created_at.isoformat() if task.created_at else None,
 		"updated_at": task.updated_at.isoformat() if task.updated_at else None
 	}

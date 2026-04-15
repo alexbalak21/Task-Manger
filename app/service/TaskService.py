@@ -2,9 +2,28 @@ from repository.TaskRepository import TaskRepository
 from model.Task import Task
 from model.Priority import Priority
 from model.Status import Status
+from model.User import User
+from model.Todo import Todo
+from extensions.db import db
 from datetime import datetime
 
 class TaskService:
+	@staticmethod
+	def _parse_id_list_field(value, field_name):
+		if value is None:
+			return []
+		if not isinstance(value, list):
+			raise ValueError(f"{field_name} must be an array of IDs")
+
+		ids = []
+		for item in value:
+			if isinstance(item, bool) or not isinstance(item, int):
+				raise ValueError(f"{field_name} must contain integer IDs")
+			ids.append(item)
+
+		# Preserve order while dropping duplicates.
+		return list(dict.fromkeys(ids))
+
 	@staticmethod
 	def _parse_datetime_field(value, field_name):
 		if value is None:
@@ -46,6 +65,25 @@ class TaskService:
 		if not status:
 			raise ValueError("Invalid status_id")
 
+		user_ids = TaskService._parse_id_list_field(data.get("users"), "users")
+		todo_ids = TaskService._parse_id_list_field(data.get("todos"), "todos")
+
+		users = []
+		if user_ids:
+			users = User.query.filter(User.id.in_(user_ids)).all()
+			found_user_ids = {u.id for u in users}
+			missing_user_ids = [user_id for user_id in user_ids if user_id not in found_user_ids]
+			if missing_user_ids:
+				raise ValueError(f"Invalid user IDs: {missing_user_ids}")
+
+		todos = []
+		if todo_ids:
+			todos = Todo.query.filter(Todo.id.in_(todo_ids)).all()
+			found_todo_ids = {todo.id for todo in todos}
+			missing_todo_ids = [todo_id for todo_id in todo_ids if todo_id not in found_todo_ids]
+			if missing_todo_ids:
+				raise ValueError(f"Invalid todo IDs: {missing_todo_ids}")
+
 		task = Task(
 			title=data["title"],
 			description=data.get("description"),
@@ -54,7 +92,22 @@ class TaskService:
 			start_date=TaskService._parse_datetime_field(data.get("start_date"), "start_date"),
 			due_date=TaskService._parse_datetime_field(data.get("due_date"), "due_date")
 		)
-		return TaskRepository.create(task)
+
+		try:
+			TaskRepository.create(task, commit=False)
+			db.session.flush()
+
+			if users:
+				task.users = users
+
+			for todo in todos:
+				todo.task_id = task.id
+
+			db.session.commit()
+			return task
+		except Exception:
+			db.session.rollback()
+			raise
 
 	@staticmethod
 	def update(task, data):

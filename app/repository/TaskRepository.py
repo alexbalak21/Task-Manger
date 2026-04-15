@@ -11,9 +11,10 @@ class TaskRepository:
 		return Task.query.get(task_id)
 
 	@staticmethod
-	def create(task):
+	def create(task, commit=True):
 		db.session.add(task)
-		db.session.commit()
+		if commit:
+			db.session.commit()
 		return task
 
 	@staticmethod

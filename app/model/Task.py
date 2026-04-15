@@ -1,6 +1,6 @@
 from extensions.db import db
 from datetime import datetime, timezone
-from app.model.UserTask import users_tasks
+from model.UserTask import users_tasks
 from model.Priority import Priority
 from model.Status import Status
 
@@ -40,4 +40,11 @@ class Task(db.Model):
         "User",
         secondary=users_tasks,
         backref="tasks"
+    )
+
+    # One-to-many todos
+    todos = db.relationship(
+        "Todo",
+        back_populates="task",
+        cascade="all, delete-orphan"
     )
