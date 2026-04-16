@@ -178,3 +178,9 @@ Authorization: Bearer {{User_Access_Token}}
 # @name getStatuses
 GET {{baseUrl}}/api/statuses
 Authorization: Bearer {{User_Access_Token}}
+
+
+### FETCH ALL PRIORITIES REQUEST ###
+# @name getPriorities
+GET {{baseUrl}}/api/priorities
+Authorization: Bearer {{User_Access_Token}}
