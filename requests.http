@@ -171,3 +171,10 @@ Content-Type: image/png
 # @name deleteProfileImage
 DELETE {{baseUrl}}/api/user/image
 Authorization: Bearer {{User_Access_Token}}
+
+
+
+### FETCH ALL STATUS REQUEST ###
+# @name getStatuses
+GET {{baseUrl}}/api/statuses
+Authorization: Bearer {{User_Access_Token}}
