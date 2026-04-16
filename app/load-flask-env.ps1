@@ -1,5 +1,6 @@
 # Path to your .flaskenv file
 $envFile = ".flaskenv"
+$envFile = ".localenv"
 
 if (-Not (Test-Path $envFile)) {
     Write-Host ".flaskenv file not found!"

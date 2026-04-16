@@ -65,3 +65,32 @@ def register_user():
         return jsonify({"error": msg}), 400
 
     return jsonify({"success": True, "message": msg})
+
+
+# UPLOAD USER PROFILE IMAGE
+@user_bp.post("user/image")
+@jwt_required()
+def upload_profile_image():
+    user_id = int(get_jwt_identity())
+    if not request.content_type or not request.content_type.startswith("multipart/form-data"):
+        return jsonify({"error": "Content-Type must be multipart/form-data"}), 400
+
+    uploaded_file = request.files.get("profile_image")
+    if not uploaded_file or not uploaded_file.filename:
+        return jsonify({"error": "No profile_image file uploaded"}), 400
+
+    ok, msg = UserService.upload_profile_image(user_id, uploaded_file)
+    if not ok:
+        return jsonify({"error": msg}), 400
+
+    return jsonify({"success": True, "message": msg})
+
+# DELETE USER PROFILE IMAGE
+@user_bp.delete("user/image")
+@jwt_required()
+def delete_profile_image():
+    user_id = int(get_jwt_identity())
+    ok, msg = UserService.delete_profile_image(user_id)
+    if not ok:
+        return jsonify({"error": msg}), 400
+    return jsonify({"success": True, "message": msg})

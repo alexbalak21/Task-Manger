@@ -115,7 +115,7 @@ password@1234
 Content-Disposition: form-data; name="profile_image"; filename="avatar.png"
 Content-Type: image/png
 
-< ../images/avatar.png
+< me.jpg
 --WebAppBoundary--
 
 
@@ -136,4 +136,17 @@ alice.noimage@example.com
 Content-Disposition: form-data; name="password"
 
 password@1234
+--WebAppBoundary--
+
+### UPLOAD PROFILE IMAGE FOR CURRENT USER ###
+# @name uploadProfileImage
+POST {{baseUrl}}/api/user/image
+Authorization: Bearer {{loginAccess_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="profile_image"; filename="me.jpg"
+Content-Type: image/png
+
+< me.jpg
 --WebAppBoundary--

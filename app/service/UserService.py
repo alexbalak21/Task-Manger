@@ -8,6 +8,27 @@ from utils.dto import user_to_basic_dto
 class UserService:
 
     @staticmethod
+    def delete_profile_image(user_id):
+        from repository.UserProfileImageRepository import UserProfileImageRepository
+        profile_image = UserProfileImageRepository.find_by_user_id(user_id)
+        if not profile_image:
+            return False, "No profile image found for user"
+        UserProfileImageRepository.delete(profile_image)
+        return True, "Profile image deleted successfully"
+
+    @staticmethod
+    def upload_profile_image(user_id, profile_image):
+        if not profile_image or not getattr(profile_image, "filename", ""):
+            return False, "No profile image uploaded"
+
+        processed_image, image_error = ProfileImageService.process_profile_image(profile_image)
+        if image_error:
+            return False, image_error
+
+        ProfileImageService.save_for_user(user_id, processed_image)
+        return True, "Profile image uploaded successfully"
+
+    @staticmethod
     def get_all_users():
         return UserRepository.get_all_basic()
 

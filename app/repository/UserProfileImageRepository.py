@@ -5,6 +5,11 @@ from model.UserProfileImage import UserProfileImage
 class UserProfileImageRepository:
 
     @staticmethod
+    def delete(profile_image):
+        db.session.delete(profile_image)
+        db.session.commit()
+
+    @staticmethod
     def find_by_user_id(user_id):
         return UserProfileImage.query.filter_by(user_id=user_id).first()
 
