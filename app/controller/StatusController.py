@@ -60,5 +60,6 @@ def delete_status(status_id):
 def status_to_dto(status):
 	return {
 		"id": status.id,
-		"name": status.name
+		"name": status.name,
+		"color": status.color
 	}

@@ -16,7 +16,8 @@ class StatusService:
             raise ValueError("'name' is required")
         if Status.query.filter_by(name=data["name"]).first():
             raise ValueError("Status with this name already exists")
-        status = Status(name=data["name"])
+        color = data.get("color")
+        status = Status(name=data["name"], color=color)
         db.session.add(status)
         db.session.commit()
         return status
@@ -27,6 +28,8 @@ class StatusService:
             if Status.query.filter(Status.name == data["name"], Status.id != status.id).first():
                 raise ValueError("Status with this name already exists")
             status.name = data["name"]
+        if "color" in data:
+            status.color = data["color"]
         db.session.commit()
         return status
 

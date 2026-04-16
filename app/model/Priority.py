@@ -5,6 +5,7 @@ class Priority(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
+    color = db.Column(db.String(7), nullable=True)  # Hex color, e.g. #FF0000
 
     # Optional: reverse relationship
     tasks = db.relationship("Task", back_populates="priority_obj")
