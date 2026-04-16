@@ -2,7 +2,6 @@ from repository.UserRepository import UserRepository
 from model.User import User
 from service.ProfileImageService import ProfileImageService
 from utils.dto import user_to_dto
-from utils.dto import user_to_basic_dto
 
 
 class UserService:
@@ -30,11 +29,20 @@ class UserService:
 
     @staticmethod
     def get_all_users():
-        return UserRepository.get_all_basic()
+        profile_images = {img["id"]: img["image"] for img in ProfileImageService.get_all_profile_images()}
+        users = UserRepository.get_all_basic()
+
+        # users is a list of dicts, not User objects
+        for user in users:
+            user["profile_image"] = profile_images.get(user["id"])
+
+        return users
+
 
     @staticmethod
     def get_user(user_id):
         user = UserRepository.find_by_id(user_id)
+        user.profile_image = ProfileImageService.get_profile_image_base64(user_id)
         return user_to_dto(user)
 
     @staticmethod

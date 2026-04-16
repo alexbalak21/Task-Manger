@@ -8,7 +8,7 @@ import base64
 class ProfileImageService:
     MAX_UPLOAD_BYTES = 2 * 1024 * 1024
     OUTPUT_SIZE = (100, 100)
-    JPEG_QUALITY = 60
+    JPEG_QUALITY = 80
 
     @staticmethod
     def process_profile_image(file_storage):
@@ -46,4 +46,20 @@ class ProfileImageService:
         profile_image = UserProfileImageRepository.find_by_user_id(user_id)
         if not profile_image or not profile_image.blob:
             return None
-        return base64.b64encode(profile_image.blob).decode("utf-8")
+        return base64.b64encode(profile_image.blob).decode("utf-8").replace("\n", "")
+    
+    
+    @staticmethod
+    def get_all_profile_images():
+        images = UserProfileImageRepository.find_all()
+        return [
+            {
+                "id": img.user_id,
+                "image": base64.b64encode(img.blob).decode("utf-8").replace("\n", "")
+                if img.blob else None
+            }
+            for img in images
+        ]
+
+    
+    

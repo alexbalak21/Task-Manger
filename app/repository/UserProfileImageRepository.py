@@ -5,6 +5,10 @@ from model.UserProfileImage import UserProfileImage
 class UserProfileImageRepository:
 
     @staticmethod
+    def find_all():
+        return UserProfileImage.query.all()
+
+    @staticmethod
     def delete(profile_image):
         db.session.delete(profile_image)
         db.session.commit()

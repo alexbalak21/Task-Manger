@@ -27,8 +27,9 @@ class UserRepository:
         users = User.query.with_entities(
             User.id,
             User.name,
-            User.email
+            User.email,
+            User.role
         ).all()
         return [
-            {"id": u.id, "name": u.name, "email": u.email}
+            {"id": u.id, "name": u.name, "email": u.email, "role": u.role}
             for u in users]
