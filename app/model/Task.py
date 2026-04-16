@@ -21,8 +21,8 @@ class Task(db.Model):
     status_obj = db.relationship("Status", back_populates="tasks")
 
 
-    start_date = db.Column(db.DateTime, nullable=True)
-    due_date = db.Column(db.DateTime, nullable=True)
+    start_date = db.Column(db.Date, nullable=True)
+    due_date = db.Column(db.Date, nullable=True)
 
     # Timezone-aware timestamps
     created_at = db.Column(
