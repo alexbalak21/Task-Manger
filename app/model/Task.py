@@ -1,8 +1,6 @@
 from extensions.db import db
 from datetime import datetime, timezone
 from model.UserTask import users_tasks
-from model.Priority import Priority
-from model.Status import Status
 
 
 class Task(db.Model):
