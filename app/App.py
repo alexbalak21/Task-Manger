@@ -11,6 +11,7 @@ from controller.AuthController import auth_bp
 from controller.UserController import user_bp
 from controller.TaskController import task_bp
 from controller.HomeController import home_blueprint
+from controller.StatusController import status_bp
 
 # Seeds
 from seed.seed_users import seed_users
@@ -39,6 +40,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(task_bp)
+    app.register_blueprint(status_bp)
 
     # Register HomeController LAST (important for SPA routing)
     app.register_blueprint(home_blueprint)
