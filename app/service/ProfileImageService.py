@@ -2,12 +2,13 @@ import io
 from PIL import Image, ImageOps, UnidentifiedImageError
 from model.UserProfileImage import UserProfileImage
 from repository.UserProfileImageRepository import UserProfileImageRepository
+import base64
 
 
 class ProfileImageService:
     MAX_UPLOAD_BYTES = 2 * 1024 * 1024
     OUTPUT_SIZE = (100, 100)
-    JPEG_QUALITY = 55
+    JPEG_QUALITY = 60
 
     @staticmethod
     def process_profile_image(file_storage):
@@ -39,3 +40,10 @@ class ProfileImageService:
 
         profile_image = UserProfileImage(user_id=user_id, blob=image_bytes)
         return UserProfileImageRepository.save(profile_image)
+    
+    @staticmethod
+    def get_profile_image_base64(user_id):
+        profile_image = UserProfileImageRepository.find_by_user_id(user_id)
+        if not profile_image or not profile_image.blob:
+            return None
+        return base64.b64encode(profile_image.blob).decode("utf-8")

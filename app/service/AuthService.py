@@ -39,7 +39,8 @@ class AuthService:
         user = UserRepository.find_by_email(email)
         if not user or not user.check_password(password):
             return None, "Invalid credentials"
-
+        profile_image = ProfileImageService.get_profile_image_base64(user.id)
+        user.profile_image = profile_image
         access = create_access_token(identity=str(user.id))
         refresh = create_refresh_token(identity=str(user.id))
 
