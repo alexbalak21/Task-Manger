@@ -4,6 +4,7 @@ from model.Priority import Priority
 from model.Status import Status
 from model.User import User
 from model.Todo import Todo
+from service.AttachmentService import AttachmentService
 from extensions.db import db
 from datetime import datetime
 
@@ -39,6 +40,33 @@ class TaskService:
 		raise ValueError(f"{field_name} must be an ISO datetime string")
 
 	@staticmethod
+	def _parse_todo_entries(todos_data):
+		if todos_data is None:
+			return []
+		if not isinstance(todos_data, list):
+			raise ValueError("todos must be an array")
+
+		normalized = []
+		for item in todos_data:
+			if isinstance(item, str):
+				text = item.strip()
+				if not text:
+					raise ValueError("todos cannot contain empty text values")
+				normalized.append(text)
+			elif isinstance(item, bool) or not isinstance(item, int):
+				raise ValueError("todos must contain strings or integer IDs")
+			else:
+				normalized.append(item)
+
+		# Preserve order while removing exact duplicates.
+		return list(dict.fromkeys(normalized))
+
+	@staticmethod
+	def _validate_task_dates(start_date, due_date):
+		if start_date and due_date and due_date < start_date:
+			raise ValueError("due_date cannot be earlier than start_date")
+
+	@staticmethod
 	def get_all():
 		return TaskRepository.get_all()
 
@@ -47,7 +75,7 @@ class TaskService:
 		return TaskRepository.get_by_id(task_id)
 
 	@staticmethod
-	def create(data):
+	def create(data, created_by=None):
 		if not data:
 			raise ValueError("Request body is required")
 		if "title" not in data:
@@ -75,13 +103,26 @@ class TaskService:
 			if missing_user_ids:
 				raise ValueError(f"Invalid user IDs: {missing_user_ids}")
 
+		start_date = (
+			TaskService._parse_datetime_field(data.get("start_date"), "start_date").date()
+			if data.get("start_date") is not None
+			else None
+		)
+		due_date = (
+			TaskService._parse_datetime_field(data.get("due_date"), "due_date").date()
+			if data.get("due_date") is not None
+			else None
+		)
+
+		TaskService._validate_task_dates(start_date, due_date)
+
 		task = Task(
 			title=data["title"],
 			description=data.get("description"),
 			priority_id=data["priority_id"],
 			status_id=data["status_id"],
-			start_date=TaskService._parse_datetime_field(data.get("start_date"), "start_date"),
-			due_date=TaskService._parse_datetime_field(data.get("due_date"), "due_date")
+			start_date=start_date,
+			due_date=due_date
 		)
 
 		try:
@@ -91,30 +132,31 @@ class TaskService:
 			if users:
 				task.users = users
 
-			# Handle todos: can be array of IDs or array of strings (text)
-			if "todos" in data and data["todos"]:
-				todos_data = data["todos"]
-				if not isinstance(todos_data, list):
-					raise ValueError("todos must be an array")
-				
-				for todo_item in todos_data:
-					if isinstance(todo_item, str):
-						# Create new todo from string text
-						todo = Todo(
-							text=todo_item,
-							task_id=task.id,
-							in_progress=False,
-							completed=False
-						)
-						db.session.add(todo)
-					elif isinstance(todo_item, int):
-						# Link existing todo by ID
-						existing_todo = Todo.query.get(todo_item)
-						if not existing_todo:
-							raise ValueError(f"Invalid todo ID: {todo_item}")
-						existing_todo.task_id = task.id
-					else:
-						raise ValueError("todos must contain strings or integer IDs")
+			todo_entries = TaskService._parse_todo_entries(data.get("todos"))
+			todo_ids = [entry for entry in todo_entries if isinstance(entry, int)]
+			todo_texts = [entry for entry in todo_entries if isinstance(entry, str)]
+
+			if todo_ids:
+				existing_todos = Todo.query.filter(Todo.id.in_(todo_ids)).all()
+				todo_by_id = {todo.id: todo for todo in existing_todos}
+				missing_todo_ids = [todo_id for todo_id in todo_ids if todo_id not in todo_by_id]
+				if missing_todo_ids:
+					raise ValueError(f"Invalid todo IDs: {missing_todo_ids}")
+
+				for todo_id in todo_ids:
+					todo_by_id[todo_id].task_id = task.id
+
+			if todo_texts:
+				for todo_text in todo_texts:
+					todo = Todo(
+						text=todo_text,
+						task_id=task.id,
+						in_progress=False,
+						completed=False
+					)
+					db.session.add(todo)
+
+			AttachmentService.attach_to_task(task, data.get("attachments"), created_by)
 
 			db.session.commit()
 			return task
@@ -124,6 +166,9 @@ class TaskService:
 
 	@staticmethod
 	def update(task, data):
+		next_start_date = task.start_date
+		next_due_date = task.due_date
+
 		if "title" in data:
 			task.title = data["title"]
 		if "description" in data:
@@ -139,9 +184,21 @@ class TaskService:
 				raise ValueError("Invalid status_id")
 			task.status_id = data["status_id"]
 		if "start_date" in data:
-			task.start_date = TaskService._parse_datetime_field(data["start_date"], "start_date")
+			next_start_date = (
+				TaskService._parse_datetime_field(data["start_date"], "start_date").date()
+				if data["start_date"] is not None
+				else None
+			)
 		if "due_date" in data:
-			task.due_date = TaskService._parse_datetime_field(data["due_date"], "due_date")
+			next_due_date = (
+				TaskService._parse_datetime_field(data["due_date"], "due_date").date()
+				if data["due_date"] is not None
+				else None
+			)
+
+		TaskService._validate_task_dates(next_start_date, next_due_date)
+		task.start_date = next_start_date
+		task.due_date = next_due_date
 		TaskRepository.update(task)
 		return task
 

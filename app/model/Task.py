@@ -1,6 +1,7 @@
 from extensions.db import db
 from datetime import datetime, timezone
 from model.UserTask import users_tasks
+from model.Task_Attachments import task_attachments
 
 
 class Task(db.Model):
@@ -45,4 +46,11 @@ class Task(db.Model):
         "Todo",
         back_populates="task",
         cascade="all, delete-orphan"
+    )
+
+    # Many-to-many attachments
+    attachments = db.relationship(
+        "Attachment",
+        secondary=task_attachments,
+        back_populates="tasks"
     )

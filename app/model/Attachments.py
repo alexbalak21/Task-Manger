@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 from extensions.db import db
+from model.Task_Attachments import task_attachments
 
 
 class Attachment(db.Model):
@@ -15,4 +16,10 @@ class Attachment(db.Model):
 	created_at = db.Column(
 		db.DateTime,
 		default=lambda: datetime.now(timezone.utc)
+	)
+
+	tasks = db.relationship(
+		"Task",
+		secondary=task_attachments,
+		back_populates="attachments"
 	)

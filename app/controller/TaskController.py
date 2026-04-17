@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from service.TaskService import TaskService
 from middleware.admin_required import admin_required
 
@@ -25,9 +25,10 @@ def get_task(task_id):
 @task_bp.post("")
 @admin_required
 def create_task():
-	data = request.json
+	data = request.get_json(silent=True) or {}
+	creator_id = get_jwt_identity()
 	try:
-		task = TaskService.create(data)
+		task = TaskService.create(data, created_by=creator_id)
 	except ValueError as err:
 		return jsonify({"error": str(err)}), 400
 	return jsonify(task_to_dto(task)), 201
@@ -68,6 +69,15 @@ def task_to_dto(task):
 		"due_date": task.due_date.isoformat() if task.due_date else None,
 		"users": [user.id for user in task.users],
 		"todos": [todo.id for todo in task.todos],
+		"attachments": [
+			{
+				"id": attachment.id,
+				"text": attachment.text,
+				"created_by": attachment.created_by,
+				"created_at": attachment.created_at.isoformat() if attachment.created_at else None
+			}
+			for attachment in task.attachments
+		],
 		"created_at": task.created_at.isoformat() if task.created_at else None,
 		"updated_at": task.updated_at.isoformat() if task.updated_at else None
 	}

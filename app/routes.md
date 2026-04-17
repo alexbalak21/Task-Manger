@@ -139,11 +139,14 @@ Notes:
   - `status_id` (integer, required)
   - `start_date` (ISO datetime string, optional)
   - `due_date` (ISO datetime string, optional)
+  - `users` (array of user IDs, optional)
+  - `todos` (array of todo text strings and/or existing todo IDs, optional)
+  - `attachments` (array of attachment text strings and/or existing attachment IDs, optional)
 - Success:
   - `201 Created`
   - Created task DTO
 - Errors:
-  - `400 Bad Request` when required fields are missing or IDs/due_date are invalid
+  - `400 Bad Request` when required fields are missing, IDs are invalid, date format is invalid, or `due_date < start_date`
   - `403 Forbidden` when user is not admin
 
 ### PUT /api/tasks/<task_id>
@@ -191,6 +194,9 @@ Returned by TaskController `task_to_dto(task)`:
 - `status_id`
 - `start_date` (ISO string or null)
 - `due_date` (ISO string or null)
+- `users` (array of user IDs)
+- `todos` (array of todo IDs)
+- `attachments` (array of `{ id, text, created_by, created_at }`)
 - `created_at` (ISO string or null)
 - `updated_at` (ISO string or null)
 

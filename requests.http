@@ -79,7 +79,25 @@ Authorization: Bearer {{Admin_Access_Token}}
     "start_date": "2026-03-25T09:00:00",
     "due_date": "2026-03-30T10:00:00",
     "users": [2],
-    "todos": ["todo 1", "todo 2", "todo 3"]
+    "todos": ["todo 1", "todo 2", "todo 3"],
+    "attachments": ["attachment1.pdf", "attachment2.png"]
+}
+
+### CREATE TASK ASSIGNED TO USERS & TODOS & ATTACHMENTS REQUEST ###
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+Authorization: Bearer {{Admin_Access_Token}}
+
+{
+    "title": "Task with users & todos & attachments",
+    "description": "Test task with users and todos and attachments assigned directly in the creation request.",
+    "priority_id": 1,
+    "status_id": 1,
+    "start_date": "2026-03-25",
+    "due_date": "2026-03-30",
+    "users": [2],
+    "todos": ["todo 6", "todo 7", "todo 8"],
+    "attachments": ["attachment1.pdf", "attachment2.png"]
 }
 
 ### GET TASKS REQUEST ###
