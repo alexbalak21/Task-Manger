@@ -80,7 +80,7 @@ Authorization: Bearer {{Admin_Access_Token}}
     "due_date": "2026-03-30T10:00:00",
     "users": [2],
     "todos": ["todo 1", "todo 2", "todo 3"],
-    "attachments": ["attachment1.pdf", "attachment2.png"]
+    "attachments": ["attachment1 string", "attachment2 string"]
 }
 
 ### CREATE TASK ASSIGNED TO USERS & TODOS & ATTACHMENTS REQUEST ###
@@ -100,7 +100,7 @@ Authorization: Bearer {{Admin_Access_Token}}
     "attachments": ["attachment1.pdf", "attachment2.png"]
 }
 
-### GET TASKS REQUEST ###
+### GET ALL TASKS REQUEST ###
 # @name getTasks
 GET {{baseUrl}}/api/tasks
 Authorization: Bearer {{Admin_Access_Token}}

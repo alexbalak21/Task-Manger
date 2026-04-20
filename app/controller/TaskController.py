@@ -69,15 +69,7 @@ def task_to_dto(task):
 		"due_date": task.due_date.isoformat() if task.due_date else None,
 		"users": [user.id for user in task.users],
 		"todos": [todo.id for todo in task.todos],
-		"attachments": [
-			{
-				"id": attachment.id,
-				"text": attachment.text,
-				"created_by": attachment.created_by,
-				"created_at": attachment.created_at.isoformat() if attachment.created_at else None
-			}
-			for attachment in task.attachments
-		],
+		"attachments": [attachment.id for attachment in task.attachments],
 		"created_at": task.created_at.isoformat() if task.created_at else None,
 		"updated_at": task.updated_at.isoformat() if task.updated_at else None
 	}
