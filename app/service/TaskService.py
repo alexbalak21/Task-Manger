@@ -205,3 +205,9 @@ class TaskService:
 	@staticmethod
 	def delete(task):
 		TaskRepository.delete(task)
+
+
+	@staticmethod
+	def get_all_with_stats():
+		return TaskRepository.get_all_with_stats()
+
