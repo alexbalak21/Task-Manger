@@ -106,6 +106,18 @@ GET {{baseUrl}}/api/tasks
 Authorization: Bearer {{Admin_Access_Token}}
 
 
+### GET ALL PRIORITIES REQUEST ###
+GET {{baseUrl}}/api/priorities
+Authorization: Bearer {{User_Access_Token}}
+
+
+###GET ALL STATUSES REQUEST ###
+GET {{baseUrl}}/api/statuses
+Authorization: Bearer {{User_Access_Token}}
+
+
+
+
 ### REGISTER USER REQUEST ###
 # @name registerUser
 POST {{baseUrl}}/api/user/register
