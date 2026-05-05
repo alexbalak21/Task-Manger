@@ -1,0 +1,7 @@
+CREATE USER 'flaskuser'@'localhost' IDENTIFIED BY 'Password123';
+GRANT ALL PRIVILEGES ON task_manager.* TO 'flaskuser'@'localhost';
+FLUSH PRIVILEGES;
+
+
+DROP USER 'flaskuser'@'localhost';
+FLUSH PRIVILEGES;
