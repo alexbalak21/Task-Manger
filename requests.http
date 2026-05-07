@@ -184,6 +184,30 @@ Content-Disposition: form-data; name="password"
 password@1234
 --WebAppBoundary--
 
+### REGISTER USER (MULTIPART WITH IMAGE) ###
+# @name registerUserWithImage
+POST {{baseUrl}}/api/user/register
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Gordon Image
+--WebAppBoundary
+Content-Disposition: form-data; name="email"
+
+gordon.image@example.com
+--WebAppBoundary
+Content-Disposition: form-data; name="password"
+
+password@1234
+--WebAppBoundary
+Content-Disposition: form-data; name="profile_image"; filename="avatar.png"
+Content-Type: image/png
+
+< me.jpg
+--WebAppBoundary--
+
 ### UPLOAD PROFILE IMAGE FOR CURRENT USER ###
 # @name uploadProfileImage
 POST {{baseUrl}}/api/user/image
