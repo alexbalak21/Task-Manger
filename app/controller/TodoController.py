@@ -4,6 +4,7 @@ from service.TodoService import TodoService
 from repository.UserRepository import UserRepository
 
 todo_bp = Blueprint("todo", __name__, url_prefix="/api/todos")
+todo_api_bp = Blueprint("todo_api", __name__, url_prefix="/api")
 
 def admin_required(fn):
 	@jwt_required()
@@ -28,6 +29,23 @@ def get_todos():
 @jwt_required()
 def get_todos_by_task(task_id):
 	todos = TodoService.get_by_task_id(task_id)
+	return jsonify([todo_to_dto(t) for t in todos])
+
+# GET todos by ids from JSON body
+@todo_api_bp.get("/todo/ids")
+@jwt_required()
+def get_todos_by_ids():
+	data = request.get_json(silent=True) or {}
+	todo_ids = data.get("todos_ids")
+	if not isinstance(todo_ids, list):
+		return jsonify({"error": "todos must be a list of todo IDs"}), 400
+
+	try:
+		todo_ids = [int(todo_id) for todo_id in todo_ids]
+	except (TypeError, ValueError):
+		return jsonify({"error": "todos must contain only integer IDs"}), 400
+
+	todos = TodoService.get_by_ids(todo_ids)
 	return jsonify([todo_to_dto(t) for t in todos])
 
 # GET single todo

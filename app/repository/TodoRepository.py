@@ -15,6 +15,10 @@ class TodoRepository:
         return Todo.query.filter_by(task_id=task_id).all()
 
     @staticmethod
+    def get_by_ids(todo_ids):
+        return Todo.query.filter(Todo.id.in_(todo_ids)).all()
+
+    @staticmethod
     def create(todo, commit=True):
         db.session.add(todo)
         if commit:

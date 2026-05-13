@@ -106,6 +106,23 @@ GET {{baseUrl}}/api/tasks
 Authorization: Bearer {{Admin_Access_Token}}
 
 
+
+### GET ALL TODOS REQUEST ###
+# @name getTodos
+GET {{baseUrl}}/api/todos
+Authorization: Bearer {{Admin_Access_Token}}
+
+### GET SOME TODOS BY IDS REQUEST ###
+# @name getTodosByIds
+GET {{baseUrl}}/api/todo/ids
+Content-Type: application/json
+Authorization: Bearer {{Admin_Access_Token}}
+
+{
+    "todos_ids": [1, 2]
+}
+
+
 ### GET ALL PRIORITIES REQUEST ###
 GET {{baseUrl}}/api/priorities
 Authorization: Bearer {{User_Access_Token}}

@@ -17,6 +17,12 @@ class TodoService:
 		return TodoRepository.get_by_task_id(task_id)
 
 	@staticmethod
+	def get_by_ids(todo_ids):
+		todos = TodoRepository.get_by_ids(todo_ids)
+		todo_by_id = {todo.id: todo for todo in todos}
+		return [todo_by_id[todo_id] for todo_id in todo_ids if todo_id in todo_by_id]
+
+	@staticmethod
 	def create(data):
 		if not data:
 			raise ValueError("Request body is required")
