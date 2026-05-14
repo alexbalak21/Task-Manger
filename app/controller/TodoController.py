@@ -38,7 +38,7 @@ def get_todos_by_task(task_id):
 @todo_api_bp.get("/todo/id")
 @jwt_required()
 def get_todos_by_query_ids():
-	ids = request.args.getlist("ids")
+	ids = request.args.getlist("id")
 	try:
 		todo_ids = [int(i) for i in ids]
 	except (TypeError, ValueError):
