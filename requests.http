@@ -114,13 +114,8 @@ Authorization: Bearer {{Admin_Access_Token}}
 
 ### GET SOME TODOS BY IDS REQUEST ###
 # @name getTodosByIds
-GET {{baseUrl}}/api/todo/ids
-Content-Type: application/json
+GET {{baseUrl}}/api/todo/id?ids=1&ids=2
 Authorization: Bearer {{Admin_Access_Token}}
-
-{
-    "todos_ids": [1, 2]
-}
 
 
 ### GET ALL PRIORITIES REQUEST ###

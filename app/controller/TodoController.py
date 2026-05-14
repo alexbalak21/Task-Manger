@@ -31,19 +31,18 @@ def get_todos_by_task(task_id):
 	todos = TodoService.get_by_task_id(task_id)
 	return jsonify([todo_to_dto(t) for t in todos])
 
-# GET todos by ids from JSON body
-@todo_api_bp.get("/todo/ids")
-@jwt_required()
-def get_todos_by_ids():
-	data = request.get_json(silent=True) or {}
-	todo_ids = data.get("todos_ids")
-	if not isinstance(todo_ids, list):
-		return jsonify({"error": "todos must be a list of todo IDs"}), 400
 
+
+
+# GET todos by ids from query params (?ids=1&ids=2)
+@todo_api_bp.get("/todo/id")
+@jwt_required()
+def get_todos_by_query_ids():
+	ids = request.args.getlist("ids")
 	try:
-		todo_ids = [int(todo_id) for todo_id in todo_ids]
+		todo_ids = [int(i) for i in ids]
 	except (TypeError, ValueError):
-		return jsonify({"error": "todos must contain only integer IDs"}), 400
+		return jsonify({"error": "ids must be integers"}), 400
 
 	todos = TodoService.get_by_ids(todo_ids)
 	return jsonify([todo_to_dto(t) for t in todos])
