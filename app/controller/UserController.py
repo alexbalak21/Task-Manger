@@ -94,3 +94,25 @@ def delete_profile_image():
     if not ok:
         return jsonify({"error": msg}), 400
     return jsonify({"success": True, "message": msg})
+
+
+@user_bp.put("user/name")
+@jwt_required()
+def update_name():
+    user_id = int(get_jwt_identity())
+    data = request.get_json(silent=True) or {}
+    ok, result = UserService.update_name(user_id, data.get("name"))
+    if not ok:
+        return jsonify({"error": result}), 400
+    return jsonify(result)
+
+
+@user_bp.put("user/email")
+@jwt_required()
+def update_email():
+    user_id = int(get_jwt_identity())
+    data = request.get_json(silent=True) or {}
+    ok, result = UserService.update_email(user_id, data.get("email"))
+    if not ok:
+        return jsonify({"error": result}), 400
+    return jsonify(result)

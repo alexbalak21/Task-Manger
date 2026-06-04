@@ -96,6 +96,28 @@ Notes:
   - `200 OK`
   - Updated user DTO
 
+### PUT /api/user/name
+- Purpose: Update current user's display name
+- Auth: JWT required
+- Body:
+  - `name` (string, required)
+- Success:
+  - `200 OK`
+  - Updated user DTO
+- Errors:
+  - `400 Bad Request` when name is missing or empty
+
+### PUT /api/user/email
+- Purpose: Update current user's email address
+- Auth: JWT required
+- Body:
+  - `email` (string, required)
+- Success:
+  - `200 OK`
+  - Updated user DTO
+- Errors:
+  - `400 Bad Request` when email is missing, empty, or already in use
+
 ### POST /api/user/password
 - Purpose: Change current user password
 - Auth: JWT required

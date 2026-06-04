@@ -46,6 +46,38 @@ class UserService:
         return user_to_dto(user)
 
     @staticmethod
+    def update_name(user_id, name):
+        user = UserRepository.find_by_id(user_id)
+        if not user:
+            return False, "User not found"
+
+        name = (name or "").strip()
+        if not name:
+            return False, "Name is required"
+
+        user.name = name
+        UserRepository.save(user)
+        return True, user_to_dto(user)
+
+    @staticmethod
+    def update_email(user_id, email):
+        user = UserRepository.find_by_id(user_id)
+        if not user:
+            return False, "User not found"
+
+        email = (email or "").strip()
+        if not email:
+            return False, "Email is required"
+
+        existing_user = UserRepository.find_by_email(email)
+        if existing_user and existing_user.id != user_id:
+            return False, "Email already in use"
+
+        user.email = email
+        UserRepository.save(user)
+        return True, user_to_dto(user)
+
+    @staticmethod
     def update_user(user_id, data):
         user = UserRepository.find_by_id(user_id)
         if "name" in data:
