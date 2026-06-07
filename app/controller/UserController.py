@@ -22,16 +22,24 @@ def update_user():
     return jsonify(UserService.update_user(user_id, data))
 
 
+@user_bp.put("user/password")
 @user_bp.post("user/password")
 @jwt_required()
 def change_password():
     user_id = int(get_jwt_identity())
     user = UserRepository.find_by_id(user_id)
 
-    data = request.json
-    ok, msg = UserService.change_password(
-        user, data["currentPassword"], data["newPassword"]
-    )
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+    current_password = data.get("password") or data.get("currentPassword")
+    new_password = data.get("new_password") or data.get("newPassword")
+
+    if not current_password or not new_password:
+        return jsonify({"error": "Missing required fields: password, new_password"}), 400
+
+    ok, msg = UserService.change_password(user, current_password, new_password)
     if not ok:
         return jsonify({"error": msg}), 400
 

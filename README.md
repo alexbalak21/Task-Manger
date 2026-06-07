@@ -70,7 +70,7 @@ flask --app App init-db
 ### User
 - `GET /api/user` - get the current authenticated user
 - `PUT /api/user` - update the current authenticated user
-- `POST /api/user/password` - change the current user's password
+- `PUT /api/user/password` - change the current user's password
 
 ### Tasks
 - `GET /api/tasks` - list tasks for authenticated users

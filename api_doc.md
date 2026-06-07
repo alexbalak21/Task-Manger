@@ -119,7 +119,7 @@ This table enables the many-to-many relationship between users and tasks. Each r
 - `PUT /user`: Update user info (JWT required)
 - `PUT /user/name`: Update current user's display name (JWT required)
 - `PUT /user/email`: Update current user's email (JWT required)
-- `POST /user/password`: Change password (JWT required)
+- `PUT /user/password`: Change password (JWT required)
 - `GET /users`: List all users (JWT required)
 - `POST /user/register`: Register user (alternative to AuthController)
 

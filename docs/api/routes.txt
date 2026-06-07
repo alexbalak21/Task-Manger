@@ -9,7 +9,7 @@ POST /api/auth/logout
 GET /api/user
 GET /api/user/all
 PUT /api/user
-POST /api/user/password
+PUT /api/user/password
 
 GET /api/tasks
 GET /api/tasks/<int:task_id>

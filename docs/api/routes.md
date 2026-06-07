@@ -118,12 +118,12 @@ Notes:
 - Errors:
   - `400 Bad Request` when email is missing, empty, or already in use
 
-### POST /api/user/password
+### PUT /api/user/password
 - Purpose: Change current user password
 - Auth: JWT required
 - Body:
-  - `currentPassword` (string, required)
-  - `newPassword` (string, required)
+  - `password` (string, required)
+  - `new_password` (string, required)
 - Success:
   - `200 OK`
   - `{ "success": true, "message": "Password updated" }`
@@ -234,7 +234,7 @@ Returned by TaskController `task_to_dto(task)`:
   - POST /api/auth/logout
   - GET /api/user
   - PUT /api/user
-  - POST /api/user/password
+  - PUT /api/user/password
   - GET /api/tasks
   - GET /api/tasks/<task_id>
   - PUT /api/tasks/<task_id>
