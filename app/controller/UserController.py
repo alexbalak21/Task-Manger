@@ -87,11 +87,11 @@ def upload_profile_image():
     if not uploaded_file or not uploaded_file.filename:
         return jsonify({"error": "No profile_image file uploaded"}), 400
 
-    ok, msg = UserService.upload_profile_image(user_id, uploaded_file)
+    ok, result = UserService.upload_profile_image(user_id, uploaded_file)
     if not ok:
-        return jsonify({"error": msg}), 400
+        return jsonify({"error": result}), 400
 
-    return jsonify({"success": True, "message": msg})
+    return jsonify(result)
 
 # DELETE USER PROFILE IMAGE
 @user_bp.delete("user/image")

@@ -25,7 +25,12 @@ class UserService:
             return False, image_error
 
         ProfileImageService.save_for_user(user_id, processed_image)
-        return True, "Profile image uploaded successfully"
+        encoded_image = ProfileImageService.get_profile_image_base64(user_id)
+        return True, {
+            "success": True,
+            "message": "Profile image uploaded successfully",
+            "profileImage": encoded_image,
+        }
 
     @staticmethod
     def get_all_users():

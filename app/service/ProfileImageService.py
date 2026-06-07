@@ -8,7 +8,7 @@ import base64
 class ProfileImageService:
     MAX_UPLOAD_BYTES = 2 * 1024 * 1024
     OUTPUT_SIZE = (100, 100)
-    JPEG_QUALITY = 80
+    JPEG_QUALITY = 70
 
     @staticmethod
     def process_profile_image(file_storage):
