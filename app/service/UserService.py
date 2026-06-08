@@ -113,7 +113,7 @@ class UserService:
             if image_error:
                 return False, image_error
 
-        user = User(name=data["name"], email=data["email"])
+        user = User(name=data["name"], email=data["email"], role="user")
         user.set_password(data["password"])
         UserRepository.save(user)
 

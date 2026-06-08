@@ -34,6 +34,16 @@ Content-Type: application/json
     "password": "password@5678"
 }
 
+
+### USER LOGIN REQUEST ###
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "lara@example.com",
+    "password": "password@1234"
+}
+
 ### VARIABLE EXTRACTION ###
 @User_Access_Token = {{login.response.body.access_token}}
 @User_Refresh_Token = {{login.response.body.refresh_token}}
