@@ -81,6 +81,27 @@ def update_todo(todo_id):
 		return jsonify({"error": str(err)}), 400
 	return jsonify(todo_to_dto(updated))
 
+# PATCH todo (partial update)
+@todo_bp.patch("/<int:todo_id>")
+@jwt_required()
+def patch_todo_state(todo_id):
+    # Only allow updating in_progress and completed fields
+	todo = TodoService.get_by_id(todo_id)
+	if not todo:
+		return jsonify({"error": "Todo not found"}), 404
+
+	data = request.json
+	if "in_progress" not in data and "completed" not in data:
+		return jsonify({"error": "Only 'in_progress' and 'completed' fields can be updated"}), 400
+
+	try:
+		updated = TodoService.update(todo, data)
+	except ValueError as err:
+		return jsonify({"error": str(err)}), 400
+	return jsonify(todo_to_dto(updated))
+
+
+
 # DELETE todo (admin only)
 @todo_bp.delete("/<int:todo_id>")
 @admin_required
