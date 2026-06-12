@@ -101,6 +101,21 @@ def patch_todo_state(todo_id):
 	return jsonify(todo_to_dto(updated))
 
 
+# PATCH completed todo to in_progress (reopen)
+@todo_bp.patch("/<int:todo_id>/reopen")
+@jwt_required()
+def reopen_todo(todo_id):
+	todo = TodoService.get_by_id(todo_id)
+	if not todo:
+		return jsonify({"error": "Todo not found"}), 404
+	if not todo.completed:
+		return jsonify({"error": "Todo is not completed"}), 400
+	try:
+		updated = TodoService.update(todo, {"in_progress": True, "completed": False, "completed_at": None})
+	except ValueError as err:
+		return jsonify({"error": str(err)}), 400
+	return jsonify(todo_to_dto(updated))
+
 
 # DELETE todo (admin only)
 @todo_bp.delete("/<int:todo_id>")

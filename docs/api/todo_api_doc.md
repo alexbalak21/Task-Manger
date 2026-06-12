@@ -107,6 +107,22 @@ The controller registers two blueprints:
 	- `400 Bad Request` when the request does not include `in_progress` or `completed`
 	- `400 Bad Request` when `completed_at` is not a valid ISO datetime string
 
+
+## PATCH /api/todos/<todo_id>/reopen
+- Purpose: Reopen a completed todo (change from completed back to in_progress state)
+- Auth: JWT required
+- Path params:
+	- `todo_id` (integer)
+- Body: none
+- Success:
+	- `200 OK`
+	- Updated todo DTO object with `in_progress: true`, `completed: false`, `completed_at: null`
+- Errors:
+	- `404 Not Found` when the todo does not exist
+	- `400 Bad Request` when the todo is not completed
+
+
+
 ## DELETE /api/todos/<todo_id>
 - Purpose: Delete a todo
 - Auth: JWT required + admin role
