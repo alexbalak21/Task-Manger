@@ -16,13 +16,13 @@ def register():
         if uploaded_file and uploaded_file.filename:
             profile_image = uploaded_file
 
-    required_fields = ["name", "email", "password"]
+    required_fields = ["name", "email", "password", "invite_code"]
     missing_fields = [field for field in required_fields if not data.get(field)]
     if missing_fields:
         return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
 
     result, error = AuthService.register(
-        data["name"], data["email"], data["password"], profile_image
+        data["name"], data["email"], data["password"], data["invite_code"], profile_image
     )
     if error:
         return jsonify({"error": error}), 400

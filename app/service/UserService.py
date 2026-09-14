@@ -104,19 +104,50 @@ class UserService:
     
     @staticmethod
     def register_user(data, profile_image=None):
-        if UserRepository.find_by_email(data["email"]):
+        """Public self-registration. Always creates a 'member' and requires a
+        valid team invite code (see AuthService.register for the shared logic)."""
+        from service.AuthService import AuthService
+        result, error = AuthService.register(
+            data.get("name"),
+            data.get("email"),
+            data.get("password"),
+            data.get("invite_code"),
+            profile_image,
+        )
+        if error:
+            return False, error
+        return True, result
+
+    @staticmethod
+    def create_user(creator, data):
+        """Direct account creation by an Admin or Manager (no invite code needed).
+        Admins can create Managers or Members. Managers can only create Members,
+        and may optionally attach the new member to one of their teams."""
+        if creator.role not in ("admin", "manager"):
+            return False, "Not authorized to create users"
+
+        role = (data.get("role") or "member").strip().lower()
+        if role not in ("admin", "manager", "member"):
+            return False, "Invalid role"
+        if creator.role == "manager" and role != "member":
+            return False, "Managers can only create members"
+
+        required = ["name", "email", "password"]
+        missing = [f for f in required if not data.get(f)]
+        if missing:
+            return False, f"Missing required fields: {', '.join(missing)}"
+
+        email = data["email"].strip()
+        if UserRepository.find_by_email(email):
             return False, "Email already in use"
 
-        processed_image = None
-        if profile_image and getattr(profile_image, "filename", ""):
-            processed_image, image_error = ProfileImageService.process_profile_image(profile_image)
-            if image_error:
-                return False, image_error
-
-        user = User(name=data["name"], email=data["email"], role="user")
+        user = User(name=data["name"], email=email, role=role)
         user.set_password(data["password"])
         UserRepository.save(user)
 
-        if processed_image:
-            ProfileImageService.save_for_user(user.id, processed_image)
-        return True, "User registered successfully"
+        team_id = data.get("team_id")
+        if team_id and role == "member":
+            from service.TeamService import TeamService
+            TeamService.add_member(creator, team_id, user.id)
+
+        return True, user_to_dto(user)

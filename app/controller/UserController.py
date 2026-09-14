@@ -63,16 +63,31 @@ def register_user():
         if uploaded_file and uploaded_file.filename:
             profile_image = uploaded_file
 
-    required_fields = ["name", "email", "password"]
+    required_fields = ["name", "email", "password", "invite_code"]
     missing_fields = [field for field in required_fields if not data.get(field)]
     if missing_fields:
         return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
 
-    ok, msg = UserService.register_user(data, profile_image)
+    ok, result = UserService.register_user(data, profile_image)
     if not ok:
-        return jsonify({"error": msg}), 400
+        return jsonify({"error": result}), 400
 
-    return jsonify({"success": True, "message": msg})
+    return jsonify(result), 201
+
+
+# ADMIN / MANAGER: create a Manager or Member account directly (no invite code)
+@user_bp.post("users")
+@jwt_required()
+def create_user():
+    creator_id = int(get_jwt_identity())
+    creator = UserRepository.find_by_id(creator_id)
+
+    data = request.get_json(silent=True) or {}
+    ok, result = UserService.create_user(creator, data)
+    if not ok:
+        return jsonify({"error": result}), 400
+
+    return jsonify(result), 201
 
 
 # UPLOAD USER PROFILE IMAGE

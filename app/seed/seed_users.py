@@ -16,15 +16,28 @@ def seed_users():
         UserRepository.save(admin)
         print("Seeded admin user:", admin_email)
 
-    # Regular user
+    # Manager user
+    manager_email = "morgan.lee@example.com"
+    manager = UserRepository.find_by_email(manager_email)
+    if not manager:
+        manager = User(
+            name="Morgan Lee",
+            email=manager_email,
+            role="manager"
+        )
+        manager.set_password("password@1234")
+        UserRepository.save(manager)
+        print("Seeded manager user:", manager_email)
+
+    # Regular member
     user_email = "alex.smith@example.com"
     user = UserRepository.find_by_email(user_email)
     if not user:
         user = User(
             name="Alex Smith",
             email=user_email,
-            role="user"
+            role="member"
         )
         user.set_password("password@5678")
         UserRepository.save(user)
-        print("Seeded regular user:", user_email)
+        print("Seeded member user:", user_email)
