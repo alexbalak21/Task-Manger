@@ -4,7 +4,8 @@ def user_to_dto(user):
         "name": user.name,
         "email": user.email,
         "role": user.role,
-        "profile_image": getattr(user, "profile_image", None)
+        "profile_image": getattr(user, "profile_image", None),
+        "must_change_password": bool(getattr(user, "must_change_password", False)),
     }
     
 def user_to_basic_dto(user):
@@ -50,4 +51,19 @@ def invite_code_to_dto(invite_code):
         "team_id": invite_code.team_id,
         "is_active": invite_code.is_active,
         "created_at": invite_code.created_at.isoformat() if invite_code.created_at else None,
+    }
+
+
+def invitation_to_dto(invitation):
+    return {
+        "id": invitation.id,
+        "email": invitation.email,
+        "role": invitation.role,
+        "team_id": invitation.team_id,
+        "team_name": invitation.team.name if invitation.team else None,
+        "status": invitation.status,
+        "invited_by": invitation.invited_by,
+        "inviter_name": invitation.inviter.name if invitation.inviter else None,
+        "expires_at": invitation.expires_at.isoformat() if invitation.expires_at else None,
+        "created_at": invitation.created_at.isoformat() if invitation.created_at else None,
     }

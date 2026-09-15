@@ -31,3 +31,17 @@ class Config:
 
     STATIC_FOLDER = os.getenv("STATIC_FOLDER", "frontend")
     STATIC_URL_PATH = os.getenv("STATIC_URL_PATH", "")
+
+    # Mail (AlwaysData SMTP, or any standard SMTP relay)
+    MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp-<account>.alwaysdata.net")
+    MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
+    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", "true").lower() == "true"
+    MAIL_USE_SSL = os.getenv("MAIL_USE_SSL", "false").lower() == "true"
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+    MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER", "no-reply@example.com")
+    # If unset (e.g. local dev), emails are logged to the console instead of sent
+    MAIL_SUPPRESS_SEND = os.getenv("MAIL_SUPPRESS_SEND", "false").lower() == "true"
+
+    # Used to build links inside emails (invite links, etc.)
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")

@@ -5,6 +5,7 @@ from config.config import Config
 from extensions.db import db
 from extensions.bcrypt import bcrypt
 from extensions.jwt import jwt
+from extensions.mail import mail
 
 # Blueprints
 from controller.AuthController import auth_bp
@@ -17,6 +18,7 @@ from controller.StatusController import status_bp
 from controller.PriorityController import priority_bp
 from controller.UserTaskController import user_task_bp
 from controller.TeamController import team_bp
+from controller.InvitationController import invitation_bp
 
 # Seeds
 from seed.seed_users import seed_users
@@ -40,6 +42,7 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    mail.init_app(app)
 
     # Register API blueprints FIRST
     app.register_blueprint(auth_bp)
@@ -51,6 +54,7 @@ def create_app():
     app.register_blueprint(priority_bp)
     app.register_blueprint(user_task_bp)
     app.register_blueprint(team_bp)
+    app.register_blueprint(invitation_bp)
 
     # Register HomeController LAST (important for SPA routing)
     app.register_blueprint(home_blueprint)

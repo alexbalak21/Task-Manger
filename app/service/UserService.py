@@ -97,8 +97,11 @@ class UserService:
     def change_password(user, current, new):
         if not user.check_password(current):
             return False, "Current password is incorrect"
+        if len(new or "") < 8:
+            return False, "New password must be at least 8 characters"
 
         user.set_password(new)
+        user.must_change_password = False
         UserRepository.save(user)
         return True, "Password updated"
     
@@ -141,7 +144,7 @@ class UserService:
         if UserRepository.find_by_email(email):
             return False, "Email already in use"
 
-        user = User(name=data["name"], email=email, role=role)
+        user = User(name=data["name"], email=email, role=role, must_change_password=True)
         user.set_password(data["password"])
         UserRepository.save(user)
 
